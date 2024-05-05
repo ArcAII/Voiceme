@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text-to-Speech</title>
+</head>
+<body>
+<h1>Text-to-Speech</h1>
+<textarea id="text-to-read" rows="4" cols="50"></textarea>
+<button onclick="speak()">Speak</button>
+
+<script>
+function speak() {
+  var text = document.getElementById("text-to-read").value;
+  
+  // Check if the browser supports speech synthesis
+  if ('speechSynthesis' in window) {
+    var speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'en-US';
+    
+    // Speak the text
+    window.speechSynthesis.speak(speech);
+  } else {
+    alert("Sorry, your browser doesn't support speech synthesis.");
+  }
+}
+</script>
+</body>
+</html>
