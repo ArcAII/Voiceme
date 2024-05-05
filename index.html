@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text-to-Speech</title>
+<title>Text-to-Speech app</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
   body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: black; /* Set the background color to black */
+    background-color: black;
   }
 
   #video-background {
@@ -24,43 +24,84 @@
 
   #text-input {
     position: absolute;
-    top: 0; /* Place the text input at the top of the screen */
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Set a blackish background color */
-    border: none;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 0;
-    box-sizing: border-box; /* Include padding and border in element total width and height */
-  }
-
-  #voice-select {
-    position: absolute;
-    top: 40px; /* Position voice select below text input */
-    left: 50%;
-    transform: translateX(-50%);
+    top: 20px;
+    width: calc(100% - 40px);
     background-color: rgba(0, 0, 0, 0.7);
     border: none;
     color: white;
     padding: 10px;
     font-size: 16px;
     border-radius: 5px;
-    display: none; /* Hide by default */
+    box-sizing: border-box;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+  }
+
+  #voice-select {
+    position: absolute;
+    top: 60px;
+    width: calc(100% - 40px);
+    background-color: rgba(0, 0, 0, 0.7);
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    display: none;
+  }
+
+  #voice-options {
+    position: absolute;
+    top: 90px;
+    width: calc(100% - 40px);
+    background-color: rgba(0, 0, 0, 0.7);
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    display: none;
+    z-index: 1;
+  }
+
+  .voice-option {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+  }
+
+  .voice-option:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   #send-button {
     position: absolute;
-    top: 80px; /* Position mic button below text input and voice select */
-    left: 50%;
-    transform: translateX(-50%);
+    top: 130px;
+    width: 100px;
     background-color: #007bff;
     border: none;
     color: white;
-    padding: 10px 15px;
+    padding: 10px;
     font-size: 16px;
     border-radius: 5px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
     cursor: pointer;
+  }
+
+  .fas {
+    margin-right: 5px;
   }
 </style>
 </head>
@@ -70,56 +111,56 @@
   Your browser does not support HTML5 video.
 </video>
 
-<input type="text" id="text-input" placeholder="Type something...">
+<input type="text" id="text-input" placeholder="Type something..." onclick="toggleVoiceOptions()">
 <select id="voice-select"></select>
-<button id="send-button" onclick="toggleVoiceOptions()"><i class="fas fa-microphone"></i></button>
+<div id="voice-options">
+  <div class="voice-option" onclick="selectVoice('en-US')">English (US)</div>
+  <div class="voice-option" onclick="selectVoice('en-GB')">English (UK)</div>
+  <div class="voice-option" onclick="selectVoice('es-ES')">Spanish</div>
+  <div class="voice-option" onclick="selectVoice('fr-FR')">French</div>
+</div>
+<button id="send-button" onclick="speak()"><i class="fas fa-microphone"></i>Speak</button>
 
 <script>
-// Function to toggle voice options visibility
 function toggleVoiceOptions() {
-  var voiceSelect = document.getElementById('voice-select');
-  voiceSelect.style.display = voiceSelect.style.display === 'none' ? 'block' : 'none';
+  var voiceOptions = document.getElementById('voice-options');
+  voiceOptions.style.display = voiceOptions.style.display === 'block' ? 'none' : 'block';
 }
 
-// Fetch and display available voices
-function populateVoiceList() {
-  var voices = speechSynthesis.getVoices();
-  var voiceSelect = document.getElementById('voice-select');
-  voiceSelect.innerHTML = '';
+function selectVoice(lang) {
+  var voiceOptions = document.getElementById('voice-options');
+  voiceOptions.style.display = 'none';
 
-  voices.forEach(function(voice, index) {
-    var option = document.createElement('option');
-    option.textContent = voice.name + ' (' + voice.lang + ')';
-    option.setAttribute('value', index);
-    voiceSelect.appendChild(option);
-  });
+  var voiceSelect = document.getElementById('voice-select');
+  voiceSelect.value = lang;
 }
 
-// Populate voice list when speech synthesis is ready
-speechSynthesis.onvoiceschanged = function() {
-  populateVoiceList();
-};
-
-// Function to speak text using selected voice
 function speak() {
-  var text = document.getElementById("text-input").value;
-  var voiceSelect = document.getElementById('voice-select');
-  var selectedVoiceIndex = voiceSelect.value;
+  var text = document.getElementById('text-input').value;
+  var selectedVoice = document.getElementById('voice-select').value;
   
-  var voices = speechSynthesis.getVoices();
-  var selectedVoice = voices[selectedVoiceIndex];
-  
-  // Check if the browser supports speech synthesis
   if ('speechSynthesis' in window) {
     var speech = new SpeechSynthesisUtterance(text);
-    speech.voice = selectedVoice;
-    
-    // Speak the text
+    speech.lang = selectedVoice;
     window.speechSynthesis.speak(speech);
   } else {
     alert("Sorry, your browser doesn't support speech synthesis.");
   }
 }
+
+// Populate voice list when speech synthesis is ready
+speechSynthesis.onvoiceschanged = function() {
+  var voices = speechSynthesis.getVoices();
+  var voiceSelect = document.getElementById('voice-select');
+  voiceSelect.innerHTML = '';
+
+  voices.forEach(function(voice) {
+    var option = document.createElement('option');
+    option.textContent = voice.name + ' (' + voice.lang + ')';
+    option.setAttribute('value', voice.lang);
+    voiceSelect.appendChild(option);
+  });
+};
 </script>
 </body>
 </html>
