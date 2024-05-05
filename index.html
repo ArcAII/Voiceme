@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text-to-Speech app</title>
+<title>Text-to-Speech</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
   body {
@@ -114,8 +114,10 @@
 <input type="text" id="text-input" placeholder="Type something..." onclick="toggleVoiceOptions()">
 <select id="voice-select"></select>
 <div id="voice-options">
-  <div class="voice-option" onclick="selectVoice('en-US')">English (US)</div>
-  <div class="voice-option" onclick="selectVoice('en-GB')">English (UK)</div>
+  <div class="voice-option" onclick="selectVoice('en-US')">English (US - Female)</div>
+  <div class="voice-option" onclick="selectVoice('en-US-male')">English (US - Male)</div>
+  <div class="voice-option" onclick="selectVoice('en-GB')">English (UK - Female)</div>
+  <div class="voice-option" onclick="selectVoice('en-GB-male')">English (UK - Male)</div>
   <div class="voice-option" onclick="selectVoice('es-ES')">Spanish</div>
   <div class="voice-option" onclick="selectVoice('fr-FR')">French</div>
 </div>
