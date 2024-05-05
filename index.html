@@ -114,9 +114,7 @@
 <input type="text" id="text-input" placeholder="Type something..." onclick="toggleVoiceOptions()">
 <select id="voice-select"></select>
 <div id="voice-options">
-  <div class="voice-option" onclick="selectVoice('Google US English')">English (US - Female)</div>
   <div class="voice-option" onclick="selectVoice('Google UK English Female')">English (UK - Female)</div>
-  <div class="voice-option" onclick="selectVoice('Google US English (male)')">English (US - Male)</div>
   <div class="voice-option" onclick="selectVoice('Google UK English Male')">English (UK - Male)</div>
 </div>
 <button id="send-button" onclick="speak()"><i class="fas fa-microphone"></i>Speak</button>
@@ -139,18 +137,14 @@ function speak() {
   var text = document.getElementById('text-input').value;
   var selectedVoice = document.getElementById('voice-select').value;
   
-  if ('speechSynthesis' in window) {
-    var speech = new SpeechSynthesisUtterance(text);
-    speech.lang = selectedVoice;
-    window.speechSynthesis.speak(speech);
-  } else {
-    alert("Sorry, your browser doesn't support speech synthesis.");
-  }
+  var speech = new SpeechSynthesisUtterance(text);
+  speech.lang = selectedVoice;
+  window.speechSynthesis.speak(speech);
 }
 
 // Populate voice list when speech synthesis is ready
-speechSynthesis.onvoiceschanged = function() {
-  var voices = speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged = function() {
+  var voices = window.speechSynthesis.getVoices();
   var voiceSelect = document.getElementById('voice-select');
   voiceSelect.innerHTML = '';
 
