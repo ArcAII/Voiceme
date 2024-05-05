@@ -32,14 +32,28 @@
     padding: 10px;
     font-size: 16px;
     border-radius: 0;
-    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    box-sizing: border-box; /* Include padding and border in element total width and height */
+  }
+
+  #voice-select {
+    position: absolute;
+    top: 40px; /* Position voice select below text input */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    display: none; /* Hide by default */
   }
 
   #send-button {
     position: absolute;
-    top: 50%;
-    left: 60%;
-    transform: translate(-50%, -50%);
+    top: 80px; /* Position mic button below text input and voice select */
+    left: 50%;
+    transform: translateX(-50%);
     background-color: #007bff;
     border: none;
     color: white;
@@ -57,16 +71,48 @@
 </video>
 
 <input type="text" id="text-input" placeholder="Type something...">
-<button id="send-button" onclick="speak()"><i class="fas fa-microphone"></i></button>
+<select id="voice-select"></select>
+<button id="send-button" onclick="toggleVoiceOptions()"><i class="fas fa-microphone"></i></button>
 
 <script>
+// Function to toggle voice options visibility
+function toggleVoiceOptions() {
+  var voiceSelect = document.getElementById('voice-select');
+  voiceSelect.style.display = voiceSelect.style.display === 'none' ? 'block' : 'none';
+}
+
+// Fetch and display available voices
+function populateVoiceList() {
+  var voices = speechSynthesis.getVoices();
+  var voiceSelect = document.getElementById('voice-select');
+  voiceSelect.innerHTML = '';
+
+  voices.forEach(function(voice, index) {
+    var option = document.createElement('option');
+    option.textContent = voice.name + ' (' + voice.lang + ')';
+    option.setAttribute('value', index);
+    voiceSelect.appendChild(option);
+  });
+}
+
+// Populate voice list when speech synthesis is ready
+speechSynthesis.onvoiceschanged = function() {
+  populateVoiceList();
+};
+
+// Function to speak text using selected voice
 function speak() {
   var text = document.getElementById("text-input").value;
+  var voiceSelect = document.getElementById('voice-select');
+  var selectedVoiceIndex = voiceSelect.value;
+  
+  var voices = speechSynthesis.getVoices();
+  var selectedVoice = voices[selectedVoiceIndex];
   
   // Check if the browser supports speech synthesis
   if ('speechSynthesis' in window) {
     var speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'en-US';
+    speech.voice = selectedVoice;
     
     // Speak the text
     window.speechSynthesis.speak(speech);
