@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Text-to-Speech App</title>
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=YOUR_API_KEY"></script>
 </head>
 <body>
 <h1>Text-to-Speech App</h1>
@@ -11,9 +12,8 @@
 <br>
 <label for="voiceSelect">Select Voice:</label>
 <select id="voiceSelect">
-  <option value="default">Default</option>
-  <option value="male">Male</option>
-  <option value="female">Female</option>
+  <option value="UK English Male">Male</option>
+  <option value="UK English Female">Female</option>
 </select>
 <br>
 <button onclick="speak()">Speak</button>
@@ -22,15 +22,12 @@
 function speak() {
   var text = document.getElementById("textToSpeak").value;
   var voiceType = document.getElementById("voiceSelect").value;
-  var utterance = new SpeechSynthesisUtterance(text);
   
-  if (voiceType === "male") {
-    utterance.voiceURI = 'Google UK English Male';
-  } else if (voiceType === "female") {
-    utterance.voiceURI = 'Google UK English Female';
+  if (voiceType === "Male") {
+    responsiveVoice.speak(text, "UK English Male");
+  } else if (voiceType === "Female") {
+    responsiveVoice.speak(text, "UK English Female");
   }
-  
-  window.speechSynthesis.speak(utterance);
 }
 </script>
 </body>
