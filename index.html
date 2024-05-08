@@ -11,33 +11,24 @@
 <br>
 <label for="voiceSelect">Select Voice:</label>
 <select id="voiceSelect">
+  <option value="default">Default</option>
+  <option value="male">Male</option>
+  <option value="female">Female</option>
 </select>
 <br>
 <button onclick="speak()">Speak</button>
 
 <script>
-window.onload = function() {
-  var voices = window.speechSynthesis.getVoices();
-  var voiceSelect = document.getElementById("voiceSelect");
-  
-  voices.forEach(function(voice) {
-    var option = document.createElement("option");
-    option.textContent = voice.name + ' (' + voice.lang + ')';
-    option.value = voice.name;
-    voiceSelect.appendChild(option);
-  });
-};
-
 function speak() {
   var text = document.getElementById("textToSpeak").value;
-  var voiceName = document.getElementById("voiceSelect").value;
-  
+  var voiceType = document.getElementById("voiceSelect").value;
   var utterance = new SpeechSynthesisUtterance(text);
-  var voices = window.speechSynthesis.getVoices();
   
-  utterance.voice = voices.find(function(voice) {
-    return voice.name === voiceName;
-  });
+  if (voiceType === "male") {
+    utterance.voiceURI = 'Google UK English Male';
+  } else if (voiceType === "female") {
+    utterance.voiceURI = 'Google UK English Female';
+  }
   
   window.speechSynthesis.speak(utterance);
 }
